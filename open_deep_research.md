@@ -56,16 +56,16 @@ graph TD
 
 ```mermaid
 graph TD
-    START[开始] --> Supervisor[监督者智能体]
-    Supervisor --> SupervisorTools[监督者工具]
+    START[开始] --> Supervisor[Supervisor]
+    Supervisor --> SupervisorTools[Supervisor Tools]
 
-    SupervisorTools -->|定义章节| ResearchTeam[研究团队]
+    SupervisorTools -->|定义章节| ResearchTeam[Research Team]
 
     subgraph 研究智能体
-        ResearchTeam --> ResearchAgent[研究智能体]
-        ResearchAgent --> ResearchTools[研究工具]
+        ResearchTeam --> ResearchAgent[Research Agent]
+        ResearchAgent --> ResearchTools[Research Tools]
         ResearchTools -->|搜索| ResearchAgent
-        ResearchTools -->|完成章节| ReturnToSupervisor[返回监督者]
+        ResearchTools -->|完成章节| ReturnToSupervisor[返回 Supervisor]
     end
 
     ReturnToSupervisor --> Supervisor
@@ -88,37 +88,16 @@ graph TD
   * 状态转换更加明确，便于调试和监控
 
 * **multi_agent.py（多智能体实现）**：
-  * 采用监督者-执行者架构，监督者负责规划和整合，研究团队负责具体研究
+  * 采用Supervisor-Executor架构，Supervisor负责规划和整合，Research Team负责具体研究
   * 通过工具调用实现智能体间通信，使用Sections工具进行任务分解
   * 研究过程更加自主化，依赖智能体的自主判断决定研究深度
   * 实现了并行任务处理能力，各章节可以同时研究
-  * 监督者专门负责生成引言和结论，整合研究团队的成果
+  * Supervisor专门负责生成引言和结论，整合Research Team的成果
   * 工具调用作为智能体决策的主要机制，而非预定义路径
   * 每个智能体有自己的系统指令和专门职责
   * 整体流程更加灵活，但可能更难预测和控制
   * 智能体间通过消息和工具结果进行通信和协作
 
-### 章节研究循环比较
-
-```mermaid
-graph LR
-    subgraph graph.py
-        GQ[生成查询] --> SW[搜索网络]
-        SW --> WS[撰写章节]
-        WS --> QE[质量评估]
-        QE -->|合格| C[完成]
-        QE -->|不合格| FQ[后续查询]
-        FQ --> SW
-    end
-
-    subgraph multi_agent.py
-        RA[研究智能体] --> S[搜索]
-        S --> A[分析]
-        A --> W[撰写]
-        W -->|自我判断| RA
-        W -->|完成| F[提交]
-    end
-```
 
 ## 交互方式
 
@@ -144,39 +123,6 @@ graph LR
    * 根据收集的信息撰写各个章节内容
    * 对不需要直接研究的章节（如摘要、结论），使用已完成的研究章节作为上下文
    * 整合所有章节内容，生成格式规范的完整研究报告
-
-```mermaid
-flowchart TD
-    A[用户提供研究主题] --> B[规划阶段]
-    B --> C[研究阶段]
-    C --> D[撰写阶段]
-    D --> E[最终报告]
-
-    B --> B1[生成初步查询]
-    B1 --> B2[搜索背景信息]
-    B2 --> B3[生成报告结构]
-    B3 --> B4{用户反馈?}
-    B4 -->|是| B5[调整计划]
-    B4 -->|否| C
-    B5 --> C
-
-    C --> C1[多章节并行研究]
-
-    subgraph "章节研究流程"
-    C1 --> C2[生成查询]
-    C2 --> C3[执行搜索]
-    C3 --> C4[撰写内容]
-    C4 --> C5{质量评估}
-    C5 -->|不足| C2
-    C5 -->|合格| C6[完成章节]
-    end
-
-    C6 --> D
-    D --> D1[整合研究章节]
-    D1 --> D2[生成引言和结论]
-    D2 --> D3[格式化最终报告]
-    D3 --> E
-```
 
 ## 上下文管理
 
@@ -212,9 +158,9 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant S as 监督者
-    participant R as 研究智能体
-    participant T as 工具系统
+    participant S as Supervisor
+    participant R as Research Agent
+    participant T as Tool System
 
     S->>R: 分配章节任务
     loop 研究过程
