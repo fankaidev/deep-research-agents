@@ -1,0 +1,9 @@
+[submodule "deep-searcher"]
+	path = deep-searcher
+	url = git@github.com:zilliztech/deep-searcher.git
+[submodule "open_deep_research"]
+	path = open_deep_research
+	url = git@github.com:langchain-ai/open_deep_research.git
+[submodule "node-DeepResearch"]
+	path = node-DeepResearch
+	url = git@github.com:jina-ai/node-DeepResearch.git
